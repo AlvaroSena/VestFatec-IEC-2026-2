@@ -5,7 +5,7 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 
-RUN mvn -B clean package -DskipTest
+RUN mvn -B clean package -DskipTests
 
 # Execução
 FROM eclipse-temurin:21-jre
