@@ -5,10 +5,6 @@ on:
     branches:
       - feat-render
 
-  workflow_dipatch:
-    permisssions:
-      contents: read
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -40,13 +36,12 @@ jobs:
           path: target/*.jar
   deploy:
     needs: build
-    if: github.ref == 'refs/heads/feat-render' # && github.event_name == 'push'
+    if: github.ref == 'refs/heads/feat-render'
     runs-on: ubuntu-latest
-
     steps:
       - name: Realizar o deploy
         env:
           RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
-        run: |
-          curl --fail --silent --show-error \ --request POST \ 
-          "${secrets.RENDER_DEPLOY_HOOK_URL}&ref=${GITHUB_SHA}"
+
+        run: curl --fail --silent --show-error \ --request POST \
+          "${RENDER_DEPLOY_HOOK_URL}&ref=${GITHUB_SHA}"
