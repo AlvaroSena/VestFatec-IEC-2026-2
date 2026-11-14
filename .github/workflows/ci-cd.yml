@@ -2,6 +2,8 @@ name: CI
 
 on:
   push:
+    branches:
+      - feat-render
 
 jobs:
   build:
@@ -32,3 +34,15 @@ jobs:
         with:
           name: app-java
           path: target/*.jar
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/feat-render' # && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Realizar o deploy
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl --fail --silent --show-error \ --request POST \ 
+          "${{secrets.RENDER_DEPLOY_HOOK_URL}}&ref=${GITHUB_SHA}"
